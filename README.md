@@ -1,9 +1,176 @@
 # 조항재 [201840229]
 ***
+## [04월06일]
+### 오늘 배운 내용 요약
+> 1. 반복문(for in과 for of, 중첩-별찍기, break, continue, 기타 내용)
+> 2. 잠깐. 배열
+> 3. 잠깐. 자주 쓰이는 함수
+
+### [4장. 반복문]
+#### <4. for in과 for of 반복문>
+- for in 반복문은 배열의 인덱스와 데이터 값 둘다 가져오고 싶을때 사용!
+```jsx
+// for in 반복문 예제
+let foo = [10, 20, 30, 40, 50];
+
+for(let i in foo){
+    console.log(`${i}번째 요소는 ${foo[i]}이다.`)  // 출력: 0번째 요소는 10이다. 1번째 요소는 20이다. ...
+}                                                 // 백틱이 아닌 ' '를 사용하면 문자열로 출력되니 주의!
+```
+- for of 반복문은 배열의 데이터 값만 가져오고 싶을때 사용!
+```jsx
+// for of 반복문 예제
+let foo = [10, 20, 30, 40, 50];
+
+for(let item of foo){
+   console.log(item)  // 출력: 10 20 30 40 50
+}
+```
+
+#### <5. 중첩 반복문>
+- 중첩 반복문을 이용해서 다양한 도형을 만들 수 있다 : ex) 삼각형, 마름모, 사다리꼴...
+
+#### <6. break 키워드>
+- 반복문을 벗어날때 사용.
+```jsx
+// break 키워드 예제
+let i = 0;
+let foo = [2, 3, 5, 4, 10];
+while(true){              
+    if(foo[i]%2==0){      // 배열에 있는 값이 짝수일때
+        bar = foo[i];     // 그 짝수 값을 bar 변수에 집어넣고
+        break;            // break를 만나서 while문 밖으로 나갈수있음.
+    }
+    i = i+1;              // i++, i +=1 이랑 같음.
+}
+console.log(`처음 발견한 짝수는 ${bar}입니다.`);  // 출력: 처음 발견한 짝수는 2입니다.
+```
+
+#### <7. continue 키워드>
+- 반복문 내부에서 현재 반복을 멈추고 다음 반복을 진행.
+```jsx
+// continue 사용 예제
+for(let i=1; i<10 i++) {
+	if(i%2==0){
+		continue;   // continue문은 if문이 아닌 for문을 계속 반복하라고 함.
+	}  
+	console.log(i);  // 출력: 1 3 5 7 9
+}
+```
+
+#### <8. 기타 내용>
+- 스코프(Scope): 변수를 사용할 수 있는 범위. 전역변수와 지역변수.
+- 호이스팅(Hoisting): 해당 블록에서 사용할 변수를 미리 확인해서 정리하는 작업.
+- var 키워드: 지금으로 따지면 let 키워드. 익스플로러에서 썼었음.
+
+
+#### <잠깐. 배열 관련>
+- 배열 선언과 초기화
+```jsx
+// 배열 선언, 초기화 예시
+let foo = new Array();   // foo 변수를 객체화해서 배열을 선언.
+let bar = [];            // bar 변수를 배열로 선언
+foo = [1, 10, Orange]    // 초기화 
+bar = [1, 10, Orange]    // 초기화
+```
+- 배열 선언과 초기화를 동시에.
+```jsx
+// 배열의 선언과 동시에 초기화
+let foo = new Array(1, 10, Orange);  // 소괄호이니 주의!
+let bar = [1, 10, Orange];          
+```
+- 배열의 길이를 알고 싶을때 .length 사용
+
+#### <잠깐. 자주 쓰이는 함수 관련>
+- push: 배열의 끝에 원하는 값을 추가해주는 함수
+```jsx
+// push 사용 예시
+let foo = [1,3,2,7,6];
+foo.push("push 추가", 0.5, 3.2);
+console.log(foo);   // 출력: 1, 3, 2, 7, 6, 'push 추가', 0.5, 3.2
+```
+- pop: 배열의 마지막 주소에 있는 값을 제거해주는 함수
+```jsx
+// pop 사용 예시
+let foo = [1,3,2,7,6];
+foo.pop();
+console.log(foo);   // 출력: 1, 3, 2, 7
+```
+- shift: 배열의 첫번째 주소에 있는 값을 제거한 후에 반환해주는 함수
+```jsx
+// shift 사용 예시
+let foo = [1,3,2,7,6];
+foo.shift();
+console.log(foo);   // 출력: 3, 2, 7, 6
+```
+   - push와 pop을 이용하면 stack으로 이용할 수 있다.
+   - push와 shift를 이용하면 queue로 이용할 수 있다.
+
+- concat: 두 개의 배열을 합쳐주는 함수
+```jsx
+// concat 사용 예시
+let foo = [1,3,2,7,6];
+let bar = ["a","b","c","d","e"];
+foo = foo.concat(bar);
+console.log(foo);   // 출력: 1, 3, 2, 7, 6, 'a', 'b', 'c', 'd', 'e'
+```
+- reverse: 배열을 역순으로 재배치해주는 함수
+```jsx
+// reverse 사용 예시
+let foo = [1,3,2,7,6];
+foo.reverse();
+console.log(foo); // 출력: 6, 7, 2, 3, 1
+```
+- spot: 배열을 순서대로 정렬해주는 함수
+```jsx
+// sort 사용 예시
+let foo = [1,3,2,7,6];
+foo.sort();
+console.log(foo);  // 출력: 1, 2, 3, 6, 7
+```
+- slice: 배열에서 내가 원하는 만큼의 데이터를 추출해주는 함수
+  - slice( [시작 인덱스], [마지막 인덱스] )
+  - 추출해서 다른곳에 사용 가능.
+  - 추출했던 원래 배열은 그대로 유지.
+```jsx
+// slice 사용 예시
+let foo = [1,3,2,7,6,9,8,5,4,0];
+console.log(foo);
+console.log(foo.slice(1,5)); // 출력: 3, 2, 7, 6
+                             // 인덱스 1부터 5직전까지 추출 = 인덱스 1~4인 값.
+console.log(foo);            // 출력: 1, 3, 2, 7, 6, 9, 8, 5, 4, 0
+```
+- splice: slice와 다르게 그냥 잘라버리는 함수. 그래서 원래 배열은 잘려져 있음.
+  - splice( [시작 인덱스], [잘라낼 인덱스 갯수] )
+```jsx
+// splice 사용 예시
+foo = ["a", "b", "c", "d", "e"];
+bar = foo.splice(1,3);  // 인덱스 1에서 3개를 잘라서 bar에 저장.
+console.log(bar);       // 잘라낸 값: b, c, d가 출력
+console.log(foo);       // foo에 남은 값 : a, e가 출력
+```
+- array.splice( [시작 인덱스], [잘라낼 인덱스 갯수], [추가 값] ): 추가한 값은 잘라진 부분에 들어감.
+```jsx
+// array.splice 사용 예시
+foo = ["a", "b", "c", "d", "e"];
+bar = foo.splice(1,3,"삽입");  // foo의 인덱스 1부터 3개값은 bar에 저장 + 잘라낸 부분에 "삽입" 추가 
+console.log(foo);      // 출력: 'a', '삽입', 'e'
+console.log(bar);      // 출력: 'b', 'c', 'd'
+```
+- join: 배열값들 사이에 원하는 문자를 삽입하여 반환하는 함수
+```jsx
+// join 사용 예시
+foo = [0, 1, 2, 3, 4, 5];
+foo = foo.join("/");
+console.log(foo);   // 출력: 0/1/2/3/4/5
+```
+
+
+***
 ## [03월30일]
 ### 오늘 배운 내용 요약
 > 1. 조건문(중첩, switch, 삼항연산자, 입력받기)
-> 2. 반복문(배열, while, for, for in 와 for of)
+> 2. 반복문(배열, while, for, for in과 for of)
 
 - 입력이나 삭제 한꺼번에 하기 : Ctrl+Shift+Alt 누른상태로 방향키 위,아래로 움직이면 커서가 위,아래로 늘어남. <br>
 그래서 커서 범위에 따라 여러줄 삭제, 입력가능 + ESC키 누르면 원래상태로 돌아옴.
