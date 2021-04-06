@@ -103,8 +103,7 @@ let foo = [1,3,2,7,6];
 foo.shift();
 console.log(foo);   // 출력: 3, 2, 7, 6
 ```
-   - push와 pop을 이용하면 stack으로 이용할 수 있다.
-   - push와 shift를 이용하면 queue로 이용할 수 있다.
+- push와 pop을 이용하면 stack, push와 shift를 이용하면 queue.
 
 - concat: 두 개의 배열을 합쳐주는 함수
 ```jsx
@@ -144,23 +143,23 @@ console.log(foo);            // 출력: 1, 3, 2, 7, 6, 9, 8, 5, 4, 0
   - splice( [시작 인덱스], [잘라낼 인덱스 갯수] )
 ```jsx
 // splice 사용 예시
-foo = ["a", "b", "c", "d", "e"];
-bar = foo.splice(1,3);  // 인덱스 1에서 3개를 잘라서 bar에 저장.
+let foo = ["a", "b", "c", "d", "e"];
+let bar = foo.splice(1,3);  // 인덱스 1에서 3개를 잘라서 bar에 저장.
 console.log(bar);       // 잘라낸 값: b, c, d가 출력
 console.log(foo);       // foo에 남은 값 : a, e가 출력
 ```
 - array.splice( [시작 인덱스], [잘라낼 인덱스 갯수], [추가 값] ): 추가한 값은 잘라진 부분에 들어감.
 ```jsx
 // array.splice 사용 예시
-foo = ["a", "b", "c", "d", "e"];
-bar = foo.splice(1,3,"삽입");  // foo의 인덱스 1부터 3개값은 bar에 저장 + 잘라낸 부분에 "삽입" 추가 
+let foo = ["a", "b", "c", "d", "e"];
+let bar = foo.splice(1,3,"삽입");  // foo의 인덱스 1부터 3개값은 bar에 저장 + 잘라낸 부분에 "삽입" 추가 
 console.log(foo);      // 출력: 'a', '삽입', 'e'
 console.log(bar);      // 출력: 'b', 'c', 'd'
 ```
 - join: 배열값들 사이에 원하는 문자를 삽입하여 반환하는 함수
 ```jsx
 // join 사용 예시
-foo = [0, 1, 2, 3, 4, 5];
+let foo = [0, 1, 2, 3, 4, 5];
 foo = foo.join("/");
 console.log(foo);   // 출력: 0/1/2/3/4/5
 ```
