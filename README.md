@@ -1,5 +1,203 @@
 # 조항재 [201840229]
 ***
+## [04월13일]
+### 오늘 배운 내용 요약
+> 1. 함수 생성 방법(익명, 선언적, 화살표 함수)
+> 2. 함수 기본 형태
+> 3. 함수 매개변수 초기화
+> 4. 콜백 함수
+> 5. 표준 내장 함수(숫자 변환, 타이머 함수)
+
+### [5장. 함수]
+#### <1. 함수 생성 방법>
+- 익명 함수: 이름이 없는 함수. 이름이 없어 호출을 할수없어서 변수를 사용함.
+   - 형태: let 변수이름 = function( ) {      };
+   - 함수 객체를 변수에 넣어서 변수를 사용하는 방식.
+```jsx
+// 익명 함수 예시
+let foo = function() {         // 익명함수를 변수 foo에 넣음.
+	console.log("첫번줄");
+	console.log("두번째 줄");
+};                             // 함수니까 세미콜론 붙이기!
+foo();             // foo 호출
+console.log(foo);  // console창에 foo 출력  
+```
+
+- 선언적 함수 : 이름이 있는 함수. 이름이 있으니 변수에 넣을 필요 없음.
+   - 형태: function 함수이름( ) {     };
+   - 일반적인 함수를 만들때는 선언적 함수를 사용함.
+```jsx
+// 선언적 함수 예시
+function foo() {             // 함수이름이 foo
+	console.log("첫번줄");
+	console.log("두번째 줄");
+};                             
+foo();              // 함수 foo를 호출
+console.log(foo);
+```
+
+- 화살표 함수 : 익명함수를 더 간단하게 생성하는 방법.
+   - 형태: let 변수이름 = ( ) ⇒ {  };
+   - function 키워드 사용 안함.
+   - 하나의 표현식을 리턴하는 함수는 중괄호 생략 가능. 근데 중괄호 하는게 오류 안나서 생략 안하는게 나음.
+```jsx
+// 화살표 함수 예시
+let foo = () => {            // 익명함수이니까 변수 foo에 넣음.
+	console.log("첫번줄");
+	console.log("두번째 줄");
+};                             
+foo();            
+console.log(foo);
+```
+
+#### <2. 함수의 기본 형태>
+```jsx
+// 함수의 기본 형태
+function 함수이름(매개변수) {   // 매개변수는 여러개여도 상관없음.
+    함수 코드;
+    return 리턴값;             // 리턴값 없어도 상관없음.
+}
+```
+
+- 계산식을 return하는것보단, 변수에 계산식을 넣고 그 변수를 return하는게 더 나음.
+```jsx
+// 계산식을 return하는 방식
+function power(x) {
+    return x * x;
+}
+console.log(power(10));
+
+// 계산식을 변수에 넣고 변수를 return하는 방식
+function foo(x){
+    let bar = x * x;
+    return bar;
+}
+let foobar = foo(10);
+console.log(foobar);    // 변수 이용하는게 더 보기 좋음.
+```
+
+- 매개변수가 여러개인 함수
+```jsx
+// 매개변수가 여러개인 함수 예시
+function foo(a, b) {        // 매개변수가 2개인 경우
+	let bar = a + b;
+	return bar;
+}
+let foobar = foo(10, 20);   // 받는값도 2개여야 한다!
+console.log(foobar);
+```
+
+- 리턴 없는 함수
+```jsx
+// 리턴이 없는 함수 예시
+function print(message){
+    console.log(`${message}라고 말했습니다.`);    // backtick(`)+($)+{}를 쓰면 괄호안에 변수내용이 들어감.  
+}                                                 
+print("안녕하세요.");  // "안녕하세요"는 message에 들어감. 매개변수.
+```
+
+#### <3. 함수 매개변수 초기화>
+- 초기화가 필요한 이유
+```jsx
+// 초기화가 필요한 이유 예시
+function print(name, count){
+    console.log(`${name}이/가 ${count}개 있습니다.`);    
+}
+print("사과",10);   // "사과"는 name에, 10은 count에 들어감.
+print("사과");      // "사과"는 name에 들어가는데, count에 들어갈 값이 없기때문에 
+                    //  undefined가 뜸! 그래서 초기화를 시켜줘야함.
+```
+
+- 조건문으로 초기화하기1
+```jsx
+// 조건문으로 매개변수 초기화 예시1
+function print(name, count){
+    if(!count){
+        count = "입력하시오!!";
+    }   
+    console.log(`${name}이/가 ${count}개 있습니다.`);    
+}
+print("사과",10);   // "사과"는 name에, 10은 count에 들어감.
+print("사과");      // "사과"는 name에 넣고, count에 넣을 값이 없기 때문에
+                    //  들어갈 값은 위에서 초기화한 값인 "입력하시오!!"가 들어감.
+```
+
+- 조건문으로 초기화하기2
+```jsx
+// 조건문으로 매개변수 초기화 예시2-디폴트 매개변수
+function print(name="무명", count=1){
+    console.log(`${name}이/가 ${count}개 있습니다.`);    
+}
+print("사과",10); // "사과"는 name에, 10은 count에 들어감.
+print("사과");    // "사과"는 name에 넣고, count는 넣을 값이 없기때문에 초기화한 값 1이 들어감.
+print();          // name과 count에 넣을 값이 없기때문에 초기화한 값 "무명"과 1이 들어감.
+```
+
+#### <4. 콜백 함수>
+- 콜백 함수: 함수의 매개변수로 전달하는 함수. 자기 자신을 다시 불러들임.
+```jsx
+// 콜백 함수 예시
+function tenTimes(foo) {      // 매개변수에다가 foo를 넣음.     
+    for(let i=0; i<10; i++){
+        foo();                // 매개변수로 전달한 foo를 호출
+    }
+}  
+
+tenTimes( function ()  {        // 익명함수.
+    console.log("함수 호출");
+});
+
+tenTimes( () => {               // 화살표 함수로도 사용 가능. 
+    console.log("함수 호출");
+});
+```
+
+#### <5. 표준 내장 함수>
+- 숫자 변환 함수
+  - parseInt() : 문자열을 정수로 변환시켜주는 함수
+  - parseFloat() : 문자열을 실수로 변환시켜주는 함수
+```jsx
+// 숫자 변환 함수 예시
+let inputA = '52';
+let inputB = '52.273';
+let inputC = '1403동';
+
+console.log(parseInt(inputA));      // 52 
+console.log(parseFloat(inputA));    // 52 
+ 
+console.log(parseInt(inputB));      // 52 
+console.log(parseFloat(inputB));    // 52.273 (소수점까지 나옴)
+ 
+console.log(parseInt(inputC));      // 1403 (정수만 나옴)
+
+console.log(Number(inputA));       // 52     (정수로 나옴)
+console.log(Number(inputB));       // 52.273 (실수로 나옴) 
+console.log(Number(inputC));       // NaN (문자열이 섞여있는 숫자는 출력못함)
+```
+ - 진법 변환도 가능함: ex) parseInt("10", 2); 하면 10을 2진수로 변환시켜서 2가 출력됨.
+ - 숫자 생성 방법
+   - 8진수: 0숫자    >> ex) 010  하면 10진수로는 8
+   - 16진수: 0x숫자 >> ex) 0x10 하면 10진수로는 16
+
+- 타이머 함수
+   - setTimeout(함수, 시간): 특정 시간 후에 함수를 실행함.
+   - setInterval(함수, 시간): 특정 시간마다 함수를 실행함.
+```jsx
+// 타이머 함수 예시
+setTimeout( () => {                 // 이런곳처럼 1회성일때 익명함수 쓰는게 좋음. 
+    console.log("1초 경과!!!");     // 여기는 함수.
+}, 1000)                           // 여기는 시간. 1000밀리초=1초
+
+setInterval( () => {                        // setInterval은 특정시간마다여서 무한작동함.
+    console.log("Interval 1초 경과!!!");     //  1초마다 출력.
+}, 1000)
+```
+
+ - 컴퓨터 시간은 밀리초(millisecond). 1000밀리초 = 1초
+ - 계속 출력하는거 종료할려면 Ctrl + C 누르면 됨
+ - 타이머 제거 함수 : clearInterval(id);
+
+***
 ## [04월06일]
 ### 오늘 배운 내용 요약
 > 1. 반복문(for in과 for of, 중첩-별찍기, break, continue, 기타 내용)
