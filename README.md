@@ -1,5 +1,229 @@
 # 조항재 [201840229]
 ***
+## [05월04일]
+### 오늘 배운 내용 요약
+> 1. 생성자 함수와 프로토타입
+> 2. 기본자료형과 객체자료형
+> 3. Number 객체(+메소드, 속성)
+> 4. String 객체(+메소드, 속성)
+
+### [6장. 객체]
+#### <4. 생성자 함수와 프로토타입>
+- 생성자 함수(Constructor): 객체를 만드는 함수.
+  - 함수니까 function 키워드를 사용.
+  - 일반함수와 구분하기 위해 이름을 대문자로 시작해서 사용.
+  - 자바처럼 new 키워드를 함께 사용해서 객체를 생성.
+```jsx
+// 생성자 함수 예시
+function Fruit(name, price) {
+	this.name = name;
+	this.price = price;
+}
+
+let foo = new Fruit("바나나", 1000);   // 객체 생성한것을 foo에 저장.
+
+console.log(foo);  // Fruit { name: '바나나', price: 1000 } 출력.
+```
+
+- 프로토타입(Prototype)
+  - 생성자 함수로 만든 객체는 프로토타입 공간에 메소드를 지정해서 모든 객체가 공유 하도록 만들수있음.
+  - 프로토타입은 모든 함수가 가지고 있는 속성으로 해당 함수를 생성자 함수로 사용했을때만 의미가 있음.
+```jsx
+// 프로토타입을 사용한 메소드 생성 예시
+function Fruit(name, price) {
+	this.name = name;
+	this.price = price;
+}
+
+Fruit.prototype.print = function () {    // 프로토타입에 메소드를 선언.
+	console.log(`${foo.name}의 가격은 ${foo.price}원입니다.`);
+};
+
+let foo = new Fruit("바나나", 1000);   
+
+console.log(foo);  // 위의 예시랑 똑같이 출력됨.
+```
+
+- 자바스크립트는 "프로토타입 기반의 객체지향 언어"여서 너무 자유로워 개발하기 힘들어서 가독성이 떨어진 문제점이 있었음.
+- 그래서 ECMAScript6부터는 클래스 기능을 추가해서 자바처럼 "클래스 기반의 객체지향 프로그래밍 언어"로도 사용 가능하게 되었음.
+
+#### <5. 조금 더 나아가기>
+- 0, ""(빈 문자열), null은 똑같아보이지만, 다 다른 것임!
+  - 0, NaN, "", undefined는 false로 변환될뿐이지 실제로는 값이 들어있는 것이라면,
+  - null은 값이 아예 없는 상태를 말함. 공백 그 자체.
+
+### [7장. 표준 내장 객체]
+- 표준 내장 객체관련 정보(MDN 사이트-모질라) : [https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects)
+  - 이 사이트도 w3schools처럼 공부할수있는 + 코드들 다 정리되어있는 사이트.
+
+#### <1. 기본 자료형과 객체 자료형의 차이>
+- 기본자료형: 숫자, 문자열, Bool
+  - typeof를 써서 출력하면 해당 변수의 자료형이 나옴.
+```jsx
+// 기본자료형 예시
+let foo = 200;    // 숫자 가능
+let bar = "Hi";   // 문자열 가능 
+let bol = true;   // Bool 가능
+
+console.log(typeof foo); // number 출력
+console.log(typeof bar); // string 출력
+console.log(typeof bol); // boolean 출력
+```
+
+- 객체 자료형: new 키워드를 사용해서 객체를 생성.
+```jsx
+// 객체자료형 예시
+let number = new Number(273);  
+
+console.log(typeof number);  // object 출력
+```
+
+- 자바스크립트는 다른 언어와 다르게 메소드를 추가할 수도 있다.
+```jsx
+// 이렇게 method를 추가하면 ERROR!
+let foo = 50;
+
+foo.method = function(){
+    return "hello";
+}
+
+console.log(foo.method());  
+```
+
+```jsx
+// 이렇게 프로토타입을 추가해야 정상작동!
+let foo = 50;
+
+Number.prototype.method = function(){  // foo가 50 숫자여서 Number 추가!
+    return "hello";                    // (변수 타입을 추가해야함.)
+} 
+
+console.log(foo.method());  // hello 출력.
+```
+
+```jsx
+// 여러개도 가능!
+let foo = 50;
+let bar = 50;
+
+Number.prototype.method = function(){  
+    return "hello";
+} 
+
+console.log(foo.method());   // hello 출력.
+console.log(bar.method());   // hello 출력. 
+                             // 이렇게 같은 Number가 여러개일경우에도 가능.
+```
+
+#### <2. Number 객체>
+- Number 객체 생성 방법 2가지.
+```jsx
+let foo = 200;              // 이렇게 그냥 넣어줘도 되고.
+let bar = new Number(200);  // new 키워드 사용해서 객체생성해도 되고.
+```
+
+- Number 객체의 메소드
+  - toExponential(): 숫자를 지수 표시로 나타낸 문자열을 리턴.
+  - toFixed(): 숫자를 고정소수점 표시로 나타낸 문자열을 리턴.
+  - toPrecision(): 숫자 길이에 따라 지수 표시 또는 고정소수점 표시로 나타낸 문자열을 리턴.
+```jsx
+// Number객체의 메소드-toFixed() 사용 예시
+let number = 200.521032;
+
+console.log(number.toFixed(1)); // number에 있는 값에서 소수점 1번째까지만 출력.
+                                 // 200.5 출력.
+console.log(number.toFixed(4));  // 소수점 4번째까지 출력.
+                                 // 200.5210 출력. 
+console.log(number.toFixed(10)); // 소수점 10번째자리까지 출력인데 넘어감!
+                                 // 200.5210320000 출력. 
+                                 // 빈 자리는 0으로 출력되는것을 확인가능! 
+```
+
+- 생성자 함수에 속성과 메소드 추가
+```jsx
+// 생성자 함수에 속성과 메소드 추가 
+function Constructor() { }         // 이렇게 생성자 함수 생성!
+Constructor.foo = 273;             // 생성자함수에 속성 추가
+Constructor.bar = function() { };  // 메소드 추가
+
+console.log(Constructor.foo);     // 속성 출력. 273 출력됨.
+console.log(constructor.bar);     // 메소드 출력. [Function] 출력됨.
+```
+ - 이렇게 생성자 함수에 속성이나 메소드 추가할 수 있음!
+
+- Number 생성자 함수의 속성
+  - MAX_VALUE: 자바스크립트의 숫자가 나타낼 수 있는 최대 숫자
+  - MIN_VALUE: 자바스크립트의 숫자가 나타낼 수 있는 최소 숫자
+  - NaN: 숫자로 나타낼 수 없는 숫자
+  - POSITIVE_INFINITY: 양의 무한대 숫자
+```jsx
+// Number 생성자 함수의 속성-MAX_VALUE 사용 예시
+let foo = Number.MAX_VALUE;    // Number객체의 MAX_VALUE속성 사용.
+let bar = Number.MAX_VALUE+1;  // 최대숫자+1이면...
+
+console.log(foo);  // 최대 숫자 출력됨.
+console.log(bar);  // 똑같이 최대 숫자 출력됨.
+                   // 자바스크립트에서는 숫자가 넘어가도 오류를 발생안하고, 
+                   // 최대 숫자 그대로 표시해준다는 것을 알 수 있음!
+```
+
+#### <3. String 객체>
+- String 객체 생성 방법 2가지.
+```jsx
+let foo = "안녕하세요";              // 이렇게 그냥 넣어줘도 되고.
+let bar = new String("안녕하세요");  // new 키워드 사용해서 객체생성해도 되고.
+```
+
+- String 객체의 속성 : length  >> 문자열의 길이를 나타냄.
+- String 객체의 메소드: 엄청 많으니 책이나 사이트 참고!
+```jsx
+// 잘못된 String 객체의 메소드 사용
+let foo = "abcdefg";
+
+foo.toUpperCase(); // 모두 대문자로 변환.
+console.log(foo);  // 근데 변환안되고 그대로 소문자 출력됨.
+                   // 변환한것을 출력한게 아니라, 소문자인 원본을 출력했기때문.
+                   // 따라서 변환한것을 출력할려면 다른곳에다가 저장을 해야함!
+```
+
+```jsx
+// String 객체의 메소드 사용-정상 작동
+let foo = "abcdefg";
+let bar = foo.toUpperCase();  // foo값을 대문자로 변환한것을 bar에 저장.
+
+console.log(foo);  // abcdefg 출력. 원본 데이터.
+console.log(bar);  // ABCDEFG 출력. 변환한 데이터.
+```
+
+```jsx
+// String 객체의 메소드 사용-추가
+let foo = "abcdefg";
+let bar = foo.toUpperCase();    // foo를 대문자로.
+let foobar = bar.toLowerCase(); // bar를 소문자로.
+
+console.log(foo);     // abcdefg 출력.
+console.log(bar);     // ABCDEFG 출력.
+console.log(foobar);  // abcdefg 출력. 
+```
+
+ - 이것을 통해 String객체의 메소드는 원본 데이터를 변경하는 것이 아니라 변경된 값을 리턴하는 것을 알수있다!
+
+- 메소드 활용
+   - indexOf() 메소드: 문자열 내부에 특정 문자열이 있는지 확인해줌.
+```jsx
+// indexOf() 메소드 사용 예시
+let foo = "안녕하세요.";
+
+if(foo.indexOf("안녕") >= 0) {  // 안녕이라는 단어가 foo에 있는지 확인하고 있는경우.
+                                // (문자열도 이렇게 비교연산자 사용해서 조건문 가능)
+	console.log("반갑습니다.");   // foo에 "안녕"이 있으니 "반갑습니다."출력함!
+}
+else {                          // "안녕"이 foo에 없을 경우
+	console.log("감사합니다.");   
+}
+```
+
+***
 ## [04월27일]
 ### 오늘 배운 내용 요약
 > 1. 타이머함수-clearInterval() 함수
