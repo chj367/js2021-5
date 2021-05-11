@@ -1,5 +1,332 @@
 # 조항재 [201840229]
 ***
+## [05월11일]
+### 오늘 배운 내용 요약
+> 1. Date 객체
+> 2. Array 객체
+> 3. underscorejs 라이브러리와 JSON 객체
+> 4. 예외 처리(예외, try-catch-finally, throw 강제)
+
+### [7장. 표준 내장 객체]
+#### <4. Date 객체>
+- new Date(): 현재 시간으로 Date 객체를 생성.
+```jsx
+// Date 객체 생성 예시-현재 시간
+let foo = new Date();   // Date 객체 생성해서 foo에다가 넣음.
+console.log(foo);       // 현재 시간 출력.
+```
+
+- new Date(유닉스 타임): 유닉스타임(1970-1-1 00:00:00부터 경과한 밀리초)으로 Date 객체를 생성.
+```jsx
+// Date 객체 생성 예시-유닉스타임
+let foo = new Date(160000000000);   // 괄호안에 유닉스타임을 넣었더니
+console.log(foo);                   // 넣은 유닉스타임에 맞는 시간 출력.
+```
+    *현재 유닉스타임 볼수있는 사이트: https://www.unixtimestamp.com/
+
+- new Date(시간 문자열): 문자열로 Date 객체를 생성.
+```jsx
+// Date 객체 생성 예시-문자열
+let foo = new Date("Dec 9, 2020 14:00:00");  // 괄호안에 시간을 문자열로 넣었더니
+console.log(foo);                            // 넣은 값에 맞는 시간 출력.
+```
+
+- new Date(년, 월-1, 일, 시간, 분, 초, 밀리초): 시간 요소를 기반으로 Date 객체를 생성.
+```jsx
+// Date 객체 생성 예시-시간요소 
+let foo = new Date(2021, 6-1, 11, 14, 30, 0);   // 괄호안에 시간 요소를 넣었더니
+console.log(foo);                               // 넣은 값에 맞는 시간 출력.
+```
+
+- Month를 나타내는 월은 0부터 시작하니 주의!
+
+- 메소드 활용: get OO () 메소드, set OO () 메소드를 가짐.
+  - 다른 프로그래밍 언어처럼 get은 가져오는 내용, set 메소드는 설정할 내용을 작성하면 됨
+  - OO에는 FullYear, Month, Day, Hours, Minutes, Seconds 등 들어감.
+  - OO에 대한 자세한 내용은 https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Date
+ 
+- 메소드 예시1: 시간 더하기
+```jsx
+// 시간 더하기 예시
+let foo = new Date();   
+console.log(foo);     // 현재 시간 출력.   
+
+foo.setFullYear(foo.getFullYear()+1);   // 현재시간에서 년+1
+foo.setMonth(foo.getMonth()+1);         // 현재시간에서 월+1
+foo.setDate(foo.getDate()+1);           // 현재시간에서 일+1
+
+console.log(foo);    // 더한 시간 출력.
+```
+
+- 메소드 예시2: 시간 간격 구하기
+```jsx
+// 시간 간격 구하기 예시
+let now = new Date();                    // 현재 시간
+let before = new Date('Dec 9, 2020');   // 괄호에 특정 날짜를 작성.
+                                        // December의 약어 Dec 사용 가능!
+
+let interval = now.getTime() - before.getTime();   // now의 시간-before의 시간 차이를 interval에 저장.
+interval = Math.floor(interval / (1000*60*60*24)); // 시간차이가 ms라서 계산을 해서 Day로 변환했음.
+
+console.log(interval);     // 출력.
+```
+
+#### <5. Array 객체>
+- Array 객체의 메소드
+  - concat(): 매개 변수로 입력한 배열의 요소를 모두 합쳐 배열을 만들어 리턴.
+  - join(): 배열 안의 모든 요소를 문자열로 만들어 리턴.
+  - pop(): 배열의 마지막 요소를 제거하고 리턴. 원본 변형!
+  - push(): 배열의 마지막 부분에 새로운 요소를 추가. 원본 변형!
+  - reverse(): 배열의 요소 순서를 뒤집음. 원본 변형!
+  - slice(): 배열 요소의 지정한 부분을 리턴.
+  - sort(): 배열의 요소를 정렬. 원본 변형!
+  - splice(): 배열 요소의 지정한 부분을 삭제하고 삭제한 요소를 리턴. 원본 변형!
+```jsx
+// 배열-json 기본 형태
+let foo = [
+	{ },         // 괄호 안에는 key: value가 들어감.
+  { },
+	{ }          // 마지막은 콤마(,) 생략
+];
+```
+
+```jsx
+// pop()과 push() 메소드 예시
+let foo = [
+    {
+    // key: value,
+        name: '고구마',
+        price: 1000
+    },
+    {
+        name: '감자',
+        price: 500
+    },
+    {
+        name: '바나나',
+        price: 1500
+    }
+];
+
+let popped = foo.pop();   // foo에 있는값중 마지막 1개를 추출해서 popped에 저장(스택의 pop)
+console.log(popped);      // "바나나" 출력.
+console.log(foo);         // 원본 출력했는데 원래 있었던 "바나나" 사라짐!
+console.log();            // 이렇게 빈칸을 출력하면 한칸 띄워줌.
+
+foo.push(popped);     // "바나나"를 popped에 다시 추가(스택의 push)
+foo.push(             // "사과", "수박" 내용을 추가.
+    {                  
+        name: '사과',
+        price: 2000
+    },
+    {
+        name: "수박",
+        price: 3000
+    }
+);
+console.log(foo);     // '바나나', "사과", "수박"이 들어있는 상태 출력.
+```
+
+- ECMAScript5에서 추가된 Array 객체의 메소드
+  - forEach(): 배열의 요소를 하나씩 뽑아 반복을 돌림.
+  - map(): 콜백 함수에서 리턴하는 것을 기반으로 새로운 배열을 만듦. React할때 많이 사용함!
+  - filter(): 콜백 함수에서 true를 리턴하는 것으로만 새로운 배열을 만들어 리턴.
+```jsx
+// forEach(), map(), filter() 메소드 예시
+let foo = [53, 72, 300, 145, 28];
+
+console.log("======<forEach() 사용>======");
+foo.forEach((item, index) => {    // foo에 있는 값을 1개씩 추출. item은 값, index는 인덱스.
+    console.log(`${index}번째 요소는 ${item}입니다.`);   // 1개씩 출력 반복.
+});
+  // forEach()는 index, item 둘다 갖고올수있음.
+
+console.log();
+console.log("=======<map() 사용>=======");
+let bar = foo.map((item, index) => {
+    return item + 10;  // foo의 item값을 10더해서 bar에 저장.
+});
+console.log(bar);      // bar 출력.
+  // map()은 item을 추출해서 다른 배열에 저장해줌.
+  // forEach()는 index, item 둘다 사용한다면, map()은 item만 갖고 사용함.
+
+console.log();
+console.log("======<filter() 사용>======");
+let foobar = foo.filter((item, index) => {
+    return item % 2 == 0;  // 짝수만 return해서 foobar에 저장.
+});
+console.log(foobar);       // foobar 출력.
+  // map()은 그냥 해당 값을 리턴해주는 메소드라면,
+  // filter()는 조건을 넣어서 맞는 값만 리턴해주는 메소드.
+```
+
+#### <6. 조금 더 나아가기>
+- 프로토타입에 메소드 추가하면 해당 자료형 전체에 추가 가능
+- 익명함수와 화살표함수에서 this 의미 차이점: 익명함수에서 this는 자기 자신을 나타내지만, 화살표함수에서 this는 최상위 객체를 의미.
+- underscore.js 라이브러리
+  - 설치해서 사용하거나, 링크 연결해서 사용할 수 있음!
+  - 사이트: https://underscorejs.org/
+  - 다운받을때 ESM과 UMD중, UMD 사용!
+    - Development는 주석도 되어있어서 코드 수정 가능한 파일.
+    - Production는 주석 없이 한줄로 크드 쭉 있는 것. 용량을 줄이기 위해 압축시켜 놓은 파일. 우리는 이거 사용!
+
+  - sortBy() 이용해서 정렬했음.
+```jsx
+// _.sortBy() 기본 형태
+_.sortBy(foo, (item) => item.price); 
+     // _는 underscorejs에서 갖고온 코드를 연결해서 사용하고 있기 때문에 
+     // 그것을 갖다 쓸려면 _를 앞에 붙이면 됨. underscore라고 말함.
+
+     // foo는 배열 이름. item은 foo에 있는 값. item.price는 item의 price를 가리킴. 
+     
+     // 예제7-9는 복잡했는데, 이렇게 underscorejs(외부 라이브러리)를 사용하면 간단하게 할 수 있음!
+```
+ 
+- JSON 객체: 자바스크립트 객체를 사용한 데이터 표현 방법
+  - 문자열은 큰 따옴표로 만듦.
+  - 모든 키는 큰 따옴표로 감싸야 함.
+  - 숫자, 문자, 불 자료형만 사용할 수 있음.
+  - 메소드
+    - JSON.stringify(객체, 변환함수, 공백 개수): 자바스크립트 객체를 문자로 만들어줌.
+    - JSON.parse(문자열): 문자열을 자바스크립트 객체로 만들어줌(파싱해줌) 
+```jsx
+// stringify() 메소드 예시
+let foo = [
+{
+	name: "A군",
+	region: "서울"
+
+}, 
+{
+	name: "B군",
+	region: "안양"
+}];
+
+let barA = JSON.stringify(foo);
+console.log(barA);   // 문자열이라 한줄로 쭉 출력됨.
+                     // 문자열이라 다 큰따옴표로 되어있음.
+
+let barB = JSON.stringify(foo, null, 2);
+                     // 변환함수는 거의 사용 안해서 null 입력함.
+                     // 2는 스페이스(공백) 개수. 2칸 띄워짐.
+console.log(barB);   // 공백 2개 때문에 JSON형태처럼 괄호가 띄워져 있음.
+```
+
+- 참고) 코드 작성하고나서 따옴표 넣고싶을때, shift+방향키로 선택을 하고 따옴표 누르면 적용됨.
+
+### [8장. 예외 처리]
+#### <1. 예외와 기본 예외 처리>
+- 오류: 오류와 의미 모두 포함. 프로그램을 실행하기 전에 발생하는 문법적 오류. 코드 실행하기 전에 발생하므로 예외 처리 방법으로 처리 불가능.
+- 예외: 프로그램을 실행하면서 발생하는 논리적 오류. 예외 처리 방법으로 처리 가능.
+- 예외 예시
+```jsx
+// 예외 예시
+function callThreeTimes(callback) {
+	for (let i=0; i<3; i++) {
+		callback();
+	} 
+}
+
+callThreeTimes(function () { console.log("안녕하세요"); });
+      // 익명함수를 사용해서 callback()함수를 선언했기 때문에 내용 정상 출력.
+
+callThreeTimes();
+     // callback()함수를 호출하는데 함수를 선언했던 내용이 없기 때문에 예외 발생.
+```
+
+- if~else문을 사용해서 예외 처리 (혹시 내용이 있는지 없는지 확인하는 용도)
+```jsx
+// if문으로 예외처리 예시
+function callTenTimes(callback) {
+	if(callback) {
+		for(let i=0; i<10; i++) {
+			callback();
+		}
+	} else {
+			console.log("매개변수 callback이 지정되지 않았습니다.");
+	}
+}
+
+// 정상 실행
+callTenTimes(function () { console.log("안녕하세요"); });  
+
+// 예외 발생
+callTenTimes(); 
+```
+
+- try-catch-finally 구문 기본형태
+```jsx
+try {
+		// 예외가 발생하면 작동하는 코드
+} catch(exception) {
+		// 예외가 발생하면 처리하는 코드
+} finally {
+		// 무조건 실행하는 코드
+}
+```
+
+#### <2. 고급 예외 처리>
+- try-catch-finally구문으로 예외처리하기
+```jsx
+Array(100)  // 이러면 배열을 100개 만든다는 뜻.
+Array(-2000) // 배열을 -2000개 만든다는 뜻인데 말이 안되기 때문에 오류 발생(RangeError)
+
+// try~catch~finally 구문으로 예외처리 예시
+try {
+		let foo = new Array(-2000);
+} catch(exception) {  
+		console.log(`${exception.name} 예외가 발생했습니다.`);
+} finally {
+		console.log("finally 구문이 실행되었습니다.");
+}
+```
+
+- finally 구문 사용 유무
+  - 진행도중 return문을 만나면 break문처럼 바로 종료함. 뒤의 내용은 작동 안함.
+  - 그래서 값을 return해주고 난 다음에 다른 작업을 해야 할 경우, finally 구문에다가 작성하면 작업 가능! 
+```jsx
+// finally 구문 없을때
+function test() {
+	try {
+			let foo = new Array(-2000);
+	} catch(exception) {
+			console.log(`${exception.name} 예외가 발생했습니다.`);
+			return;                                // 밑의 내용 출력 없이 test() 함수 종료
+			console.log("함수가 종료되었습니다.");  // 출력X
+  }
+}
+test();    // test()함수 호출.
+
+// finally 구문 있을때
+function test() {
+	try {
+			let foo = new Array(-2000);
+	} catch(exception) {
+			console.log(`${exception.name} 예외가 발생했습니다.`);
+			return;                                
+  } finally {
+			console.log("함수가 종료되었습니다.");   // 무조건 출력.
+	}
+}
+test();    // test()함수 호출.
+```
+
+#### <3. 예외 객체>
+- 예외 객체에는 name 속성(예외 이름)과 message 속성(예외 내용)이 있음.
+- exception을 e로 줄여서 사용 가능!
+
+#### <4. 예외 강제 발생>
+- throw 키워드: 강제로 예외를 발생시킬때 사용하는 키워드. 예외 사항을 테스트해보고 싶을때나 오류 메시지를 만들고 싶을때 사용하면 좋음.
+```jsx
+// throw키워드 이용한 예외 강제 발생
+const foo = new Error("메시지");
+foo.name = "오류 제목입니다";         // 작성한 이 내용으로 오류 출력됨.
+foo.message = "오류 메시지입니다.";   // 작성한 이 내용으로 오류 출력됨.
+
+throw foo;      // throw 키워드 이용해서 강제로 예외 발생.
+```
+
+***
 ## [05월04일]
 ### 오늘 배운 내용 요약
 > 1. 생성자 함수와 프로토타입
