@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="underscore-umd-min.js"></script>
+    <script>
+        let foo = [
+            {
+              name: '고구마',
+              price: 1000
+            },
+            {
+              name: '감자',
+              price: 500
+            },
+            {
+              name: '바나나',
+              price: 1500
+            }
+        ];
+        const bar = _.sortBy(foo, (item) => item.price);
+        console.log(bar);
+    </script>
+</head>
+<body>
+    
+</body>
+</html>
