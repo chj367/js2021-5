@@ -1,5 +1,283 @@
 # 조항재 [201840229]
 ***
+## [05월18일]
+### 오늘 배운 내용 요약
+> 1. process 객체
+> 2. os 모듈과 url 모듈
+> 3. File System 모듈(읽기, 쓰기, 예외처리)
+> 4. npm이용해서 설치-request, cheerio, async 모듈
+
+### [9장. Node.js 기본]
+#### <1.전역변수>
+```jsx
+console.log(__filename); // 현재 코드의 파일 경로 출력.
+console.log(__dirname);  // 현재 코드의 폴더 경로 출력.
+```
+
+#### <2. process 객체의 속성과 이벤트>
+- process 객체: 프로세스 정보를 제공하며, 제어할 수 있게 하는 객체.
+- process 객체의 속성
+  - env: 컴퓨터 환경 정보를 나타냄.
+  - version: Node.js 버전을 나타냄.
+  - versions: Node.js와 종속된 프로그램 버전을 나타냄.
+  - arch: 프로세서의 아키텍처를 나타냄.
+  - platform: 플랫폼을 나타냄.
+
+- process 객체의 메소드
+  - exit([exitCode=0]): 프로그램 종료.
+  - memoryUsage(): 메모리 사용 정보 객체를 리턴.
+  - uptime(): 현재 프로그램이 실행된 시간을 리턴.
+
+#### <3. process 객체와 이벤트 개요>
+- Node.js의 이벤트 연결 메소드: on( 이벤트 이름, 이벤트 핸들러 )
+
+- process 객체의 이벤트
+  - exit: 프로세스가 종료될 때 발생
+  - uncaughtException: 예외가 일어날 때 발생.
+
+- Node.js사이트에서 process 객체관련 정보: https://nodejs.org/dist/latest-v16.x/docs/api/process.html
+
+- process 객체 예시
+```jsx
+// exit 이벤트를 연결
+process.on('exit', () => {
+   console.log("프로세스가 종료되었습니다.");
+});
+    // 'exit'는 이벤트 이름. ()부터 }까지는 이벤트 핸들러.
+    // ()에 매개변수를 넣어서 사용가능! 
+    // 만약 ()에 code 집어넣고, console.log(code);하면 0이 출력되면 정상종료. 1이 출력되면 비정상종료.
+
+// uncaughtException 이벤트를 연결.
+process.on('uncaughtException', () => {
+   console.log("예외가 발생했습니다.");
+});
+    // ()에 error 집어넣고, console.log(error); 하면 Error 내용이 출력됨.
+
+// 예외를 강제로 발생시킴.
+error.error.error();
+```
+
+#### <4. os 모듈>
+- process했을때는 그냥 바로 써도 가능했는데, os 모듈 할때는 객체를 생성하고 사용해야됨.
+
+- os모듈의 메소드
+  - hostname(): 운영체제의 호스트이름을 리턴
+  - type(): 운영체제의 이름을 리턴
+  - platform(): 운영체제의 플랫폼을 리턴.
+  - arch(): 운영체제의 아키텍처를 리턴.
+  - release(): 운영체제의 버전을 리턴.
+  - uptime(): 운영체제가 실행된 시간을 리턴
+  - loadavg(): 로드 에버리지 정보를 담은 배열을 리턴
+  - totalmem(): 시스템의 총 메모리를 리턴.
+  - freemem(): 시스템의 사용 가능한 메모리를 리턴.
+  - cpus(): CPU의 정보를 담은 객체를 리턴.
+  - getNetworkInterfaces(): 네트워크 인터페이스의 정보를 담은 배열을 리턴.
+
+- os 모듈 예시
+```jsx
+const os = require("os");   // new키워드 없이 객체 생성.
+  // const 키워드로 함. (상수)
+  // 모듈이름이 os이면, 객체 이름을 os로 해야함!
+  // os말고 다른 이름 사용해도 상관없음. 근데 대부분 os같은 잘 쓰는 이름으로 쓰는게 좋음!
+  // require 키워드를 사용해서 os모듈을 가져옴.
+
+console.log(os.hostname()); // 현재 컴퓨터의 호스트 이름이 출력됨.
+```
+
+#### <5. url 모듈>
+- url 모듈의 메소드
+  - parse( urlStr ): URL 문자열을 URL 객체로 변환해 리턴
+  - format(urlObj): URL 객체를 URL 문자열로 변환해 리턴
+  - resolve(from, to): 매개변수를 조합하여 완전한 URL 문자열을 생성해 리턴.
+
+- url 모듈 예시
+```jsx
+const url = require("url");  // 객체 생성
+  // 이것도 url말고 다른이름 사용해도 가능. 근데 웬만하면 url로 쓰는게 좋음.
+ 
+console.log(foo.parse("https://naver.com"));
+  // JSON 형태로 프로토콜, 호스트, 포트 등 해당 URL 관련 정보가 출력됨.
+```
+
+#### <6. File System 모듈>
+- Node에 저장되어 있는 모듈이고, 보통 fs로 줄여서 사용함.
+
+- 파일 읽기 메소드
+  - fs.readFileSync(파일 이름): 동기적으로 파일을 읽어들임.
+  - fs.readFile(파일 이름, 콜백 함수): 비동기적으로 파일을 읽어들임.
+
+- 파일을 동기적으로 읽기 예시
+```jsx
+const fs = require("fs");     // 객체 생성
+const file = fs.readFileSync("test.txt");  
+  // 일단 하기전에 test.txt를 만들어서 내용을 작성했음.
+  // "test.txt"파일을 읽어서 file에 집어넣음.
+
+console.log(file);            // Buffer에 해당 내용이 16진수로 출력.
+console.log(file.toString()); // toString()메소드를 이용해서 문자열로 변환시켜서 출력. 
+
+console.log(fs.readFileSync("test.txt").toString());  // 위의 코드들을 이렇게 한줄로 줄여서 사용가능.
+```
+
+- 파일을 비동기적으로 읽기 예시
+```jsx
+const fs = require("fs");  // 객체 생성
+
+fs.readFile("test.txt", (error, file) => {
+   console.log(file);
+   console.log(file.toString());
+});
+  // "test.txt"는 파일 이름. (error 부터 } 는 콜백 함수
+  // 첫번째 매개변수는 보통 오류인 error, 두번째는 원하는 변수를 넣음.
+  // test.txt를 읽어들여서 매개변수인 file에 집어넣는 방식.
+  // 출력 내용은 동기식과 똑같음.
+```
+
+- 만약 파일이 엄청 무거우면... 
+  - 동기식은 파일이 다 다운받아질때까지 계속 기다림. 밑의 코드는 작동안함. 프로그램이 정지됨.
+  - 비동기식은 파일 다운받는건 따로 작동하고, 다운받는거랑 상관없는 밑의 코드는 작동함. 빠르고 효율적임.
+  - 그래서 현재 웬만한 웹사이트는 비동기식으로 되어있음.
+
+- 여러 파일 동기적으로 읽기 예시
+```jsx
+const fs = require("fs");   // 객체 생성
+
+const a = readFileSync("a.txt");  // a.txt 읽어와서 a에 저장.
+const b = readFileSync("b.txt");  // b.txt 읽어와서 b에 저장.
+const c = readFileSync("c.txt");  // c.txt 읽어와서 c에 저장.
+
+console.log(a, b, c);   // 출력.
+
+ // a읽어오고, b읽어오고, c읽어오는거 다 따로 순차적으로 하기 때문에 시간이 비동기적으로 읽어오는것보다 오래 걸림.
+```
+
+- 파일 쓰기 메소드: 파일 읽을때보다 매개변수가 1개 증가함.
+  - fs.writeFileSync(파일 이름, 문자열): 동기적으로 파일 씀.
+  - fs.writeFile(파일 이름, 문자열, 콜백 함수): 비동기적으로 파일 씀.
+
+- 동기적으로 파일 쓰기 예시
+```jsx
+const fs = require("fs");   // 객체 생성
+
+fs.writeFileSync("test.txt", "안녕하세요!!"); // test.txt 파일에 안녕하세요!!가 쓰여짐.
+console.log("쓰기 완료");   
+
+// 쓰기도 읽기처럼 내용이 많으면 순차적으로 진행되기 때문에 오래걸림.
+```
+
+- 비동기적으로 파일 쓰기 예시
+```jsx
+const fs = require("fs");  // 객체 생성
+
+fs.writeFile("test.txt", "잘자!", (error) => {  // test.txt 파일에 잘자!가 쓰여짐.
+   console.log("쓰기 완료!");
+});
+```
+
+- 파일 처리와 예외 처리
+  - 동기 코드 예외처리: try catch 구문
+  - 비동기 코드 예외처리: 콜백함수의 첫번째 매개변수 error를 활용
+
+- 동기 코드 예외처리 예시
+```jsx
+const fs = require("fs");          // 객체 생성
+
+try{
+   const file = fs.readFileSync("none.txt");
+   console.log(file);             
+   console.log(file.toString()); 
+} catch(exception) {               // 예외가 발생했을때
+   console.log("문제 발생");
+   console.log(exception);         // 오류메시지 출력
+}
+```
+
+- 비동기 코드 예외처리 예시
+```jsx
+const fs = require("fs");             // 객체 생성
+
+fs.readFile("none.txt", (error, file) => {
+   if(error) {                        // 에러 발생했을때
+   	console.log("문제 발생!"); 
+	console.log(error);           // 에러 출력
+   } else {                           // 정상 실행될때
+	console.log(file);            // 파일 내용을 16진수로 출력 
+	console.log(file.toString()); // 문자열로 출력
+   }
+}
+```
+
+#### <7. 노드 패키지 매니저>
+- 새로 모듈 설치하면 해당 폴더에 엄청 많은 파일이 생성되는데 이것을 github에 push하면 엄청 오래 걸리기 때문에...
+  - .gitignore파일에다가 push 하지않을 파일+폴더이름 작성해서 push하는것을 막기!
+  - .gitignore 코드 만들어주는 사이트: https://www.toptal.com/developers/gitignore
+  - .gitignore에서 주석처리는 # 사용.
+
+- Node.js는 npm(Node.js Package Manager) 패키지 매니저 사용.
+
+- npm을 이용한 외부 모듈 설치
+```jsx
+> npm install 모듈이름@버젼  // 원하는 버젼으로 설치 가능.
+```
+
+#### <8. request 모듈>
+- request 모듈: 해당 url에 있는 내용들을 전부 갖고와줌.
+
+- request 모듈 설치
+```jsx
+> npm install request
+
+ // 설치하면 많은 파일들이 설치되는데 github에 올리기엔 너무 크기 때문에
+ // .gitingnore파일에서 /node_modules 작성해서 push를 막고, package*.json 작성해서 해당 파일도 push를 막았음.
+```
+
+- request 모듈 예시
+```jsx
+const request = require("request");  // 객체 생성
+
+const url = "https://naver.com";
+request(url, (error, response, body) => {
+   console.log(body);
+});
+    // request로 받은 값을 body에 저장해서 출력.
+    // url에 있는 html내용들을 다 갖고와서 출력하는 것임.
+```
+
+#### <9. cheerio 모듈>
+- request 모듈로 가져온 웹페이지는 단순한 HTML 문자열 전부.
+- cheerio 모듈은 가져온 웹 페이지의 특정 위치를 지정해서 해당 부분만 추출할 수 있음.
+
+- cheerio 모듈 설치
+```jsx
+> npm install cheerio
+
+// 이미 위에서 node 모듈폴더는 .gitignore로 했기때문에 또 작성할 필요 없음.
+```
+
+- cheerio 모듈 예시
+```jsx
+const request = require("request");  // 객체 생성
+const cheerio = require("cheerio");  // 객체 생성
+
+const url = "https://naver.com";
+
+request(url, (error, response, body) => {
+   const $ = cheerio.load(body);
+   console.log($("strong.new").text());
+});
+   // request한 값을 body에 저장.
+   // body에 있는 값을 cheerio의 메소드인 load()로 $에 저장.
+   // $는 변수라고 생각하면됨.
+
+   // 해당 사이트 들어가서 원하는 곳의 html태그+아이디이름을 확인해서 
+   // $안에 있는 "strong.new"의 내용 중 text(텍스트)만 추출해서 출력.
+```
+
+#### <10. async 모듈>
+- 비동기 처리를 많이하면 콜백 지옥(콜백 함수를 여러개 들여쓰기하여 코드를 보기 힘든 상태)이 발생함.
+- 콜백 지옥을 해결할 수 있는것이 parallel() 메소드 사용.
+
+***
 ## [05월11일]
 ### 오늘 배운 내용 요약
 > 1. Date 객체
