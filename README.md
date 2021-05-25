@@ -1,6 +1,7 @@
 # 조항재 [201840229]
 ***
 ## [MENU]
+- [0525-13주차](#0525) : [10장.express 모듈]
 - [0518-12주차](#0518) : [9장.Node.js기본]
 - [0511-11주차](#0511) : [7장.표준내장객체] + [8장.예외처리]
 - [0504-10주차](#0504) : [6장.객체] + [7장.표준내장객체]
@@ -17,6 +18,339 @@
 - 최신 입력 날짜가 항상 위에 있어야함!
 - 입력이나 삭제 한꺼번에 하기 : Ctrl+Shift+Alt 누른상태로 방향키 위,아래로 움직이면 커서가 위,아래로 늘어남. <br>
 그래서 커서 범위에 따라 여러줄 삭제, 입력가능 + ESC키 누르면 원래상태로 돌아옴.
+
+***
+## [05월25일] <a id="0525"></a>
+### 오늘 배운 내용 요약
+> 1. 서버 생성과 실행
+> 2. 페이지 라우팅
+> 3. 요청과 응답(response, Content-Type, 상태코드, request)
+> 4. 미들웨어(정적파일, morgan, body-parser)
+> 5. RESTful 웹 서비스
+
+### [10장. express 모듈]
+- express모듈: node.js로 웹 서버를 만들어 줄수있는 모듈.
+
+#### <1. 요청과 응답>
+- 네이버 들어가서 F12(개발자도구)-Network 누르면 웹서버 관련 정보(요청, 응답메시지 등) 볼수있음!
+
+- express 모듈(공식사이트): https://expressjs.com/ko/
+- express 모듈 설치
+```jsx
+> npm install express   // 뒤에 @붙여서 버젼을 선택해서 설치도 가능!
+```
+
+#### <2. express 모듈을 사용한 서버 생성과 실행>
+- express 모듈의 기본 메소드
+  - express(): 서버 애플리케이션 객체를 생성.
+  - use(): 요청이 왔을때 실행할 함수를 지정.
+  - listen(): 서버를 실행.
+  - 예시
+```jsx
+// <express 모듈을 사용한 서버 생성과 실행>
+const express = require('express');  // express 모듈 객체 생성. new 키워드없이 객체 생성함.
+				     // 앞의 express는 다른 이름으로 해도 되지만, 웬만하면 어떤 모듈인지 알수있게 모듈과 똑같은 이름으로 짓기!
+const app = express();  // 서버 생성. app은 서버이름. 다른 이름으로 사용해도 상관없음.
+
+app.use((request, response) => {   // request 이벤트 리스너 설정. 매개변수는 request와 response. 
+    response.send('<h1>Hello express</h1>');  // 응답하기.
+});
+
+app.listen(52273, () => {  // 서버 실행. 매개변수 2개. 1개는 포트번호, 1개는 빈 함수.
+    console.log('Server running at http://127.0.0.1:52273');
+});
+
+// 결과)실행하면 서버가 구동되는 중이고, 떠있는 링크를 Ctrl+클릭하면 작성했던 내용이 화면에 떠있음.
+// 서버 끌려면(빠져 나올려면) Ctrl+C 
+```
+
+- 포트번호는 자유롭게 사용할려면 50,000 이상 설정하면됨(그 밑 번호는 다른 등록된 사이트랑 충돌될수있기 때문에)
+  - 포트 참고) https://itinformation.tistory.com/59
+
+#### <3. 페이지 라우팅>
+- 페이지 라우팅: 클라이언트 요청에 적절한 페이지를 제공하는 기술.
+
+- express 모듈의 페이지 라우팅 메소드
+  - get(path, callback): GET 요청이 발생했을때 이벤트 리스너를 지정.
+  - post(path, callback): POST 요청이 발생했을때 이벤트 리스너를 지정.
+  - put(path, callback): PUT 요청이 발생했을때 이벤트 리스너를 지정.
+  - delete(path, callback): DELETE 요청이 발생했을때 이벤트 리스너를 지정.
+  - all(path, callback): 모든 요청이 발생했을때 이벤트 리스너를 지정.
+
+- 페이지 라우팅을 할때 토큰을 활용함.
+  - 토큰은 :토큰이름 형태로 설정.
+  - 토큰은 다른 문자열로 변환 입력 가능. request 객체의 params 속성으로 전달됨.
+  - 예시
+```jsx
+// <토큰을 이용해서 페이지 라우팅>
+const express = require('express'); // express 모듈 객체 생성.
+const app = express(); // 서버 생성.
+
+app.get('/page/:id', (request, response) => {  // request 이벤트 리스너 설정하는것만 위의 예시와 다름!
+   const id = request.params.id;          // 토큰 생성. 토큰 이름은 id.
+   response.send(`<h1>${id} Page</h1>`);  // 응답하기. id값 지정한것에 따라 출력됨. 따옴표('')가 아닌 백틱(``) 사용해야함!
+});
+  // /page/:id는 URL 주소뒤에 붙는 내용.
+  // page와 id라는 이름은 다른 이름으로 지어도 상관없음.
+
+app.listen(52273, () => {  // 서버 실행.
+   console.log('Server running at http://127.0.0.1:52273');
+}); 
+
+// 결과) 실행하면 화면에는 Cannot Get / 으로 되어있는데
+// URL에 /page/500을 추가 입력하면 웹브라우저는 500 Page로 나옴!
+// 500말고 300으로 입력하면 300 Page로 나옴!
+```
+
+#### <4. 요청과 응답>
+- response 객체의 기본 메소드
+  - send(): 데이터 본문을 제공. 가장 마지막에 실행해야하며, 두번 실행할 수 없음.
+  - status(): 상태 코드를 제공
+  - set(): 헤더를 설정
+  - 예시
+```jsx
+// <response 객체>
+const express = require('express'); // express 모듈 객체 생성.
+const app = express(); // 서버 생성.
+
+app.get('*', (request, response) => {  // *은 어떤 방식으로 접근해도 가능하다는 뜻.
+  response.status(404);   // 상태코드는 404로 설정. 404는 요청페이지 없을때 에러.
+  response.set('methodA', 'ABCD');  // 이렇게 단일형식으로 데이터를 보낼 수 있음. methodA라는 키에다가 ABCD를 넣음.
+  response.set({             // 이렇게 JSON형식으로 데이터를 보낼 수 있음.
+     methodB1: 'FGHI';      // 키:값들은 마음대로 설정 가능!
+     methodB2: 'JKLM';
+  });
+  response.send('본문을 입력합니다.');  // 응답.
+});
+
+app.listen(52273, () => {  // 서버 실행.
+  console.log('Server running at http://127.0.0.1:52273');
+}); 
+
+// 결과) F12(개발자도구) 눌러서 Network 들어가서 F5(새로고침) 누르면
+// set()메소드로 입력했던 값들을 볼수있음! =웹브라우저 화면에는 안뜸
+// 웹브라우저 화면에 뜨는 내용은 send()메소드로 작성한 '본문을 입력합니다.'부분만 해당됨. 
+```
+
+- Content-Type
+  - 서버가 데이터를 제공할때 Content-Type 속성을 헤더에 적어 제공해야 웹브라우저가 구분함.
+  - MIME 형식
+    - text/plain(기본적인 텍스트), text/html(html 파일), image/png(png 이미지 파일)
+    - audio/mpe(mp3 음악 파일), video/mpeg(mpeg 비디오 파일), application/json(json 파일)
+    - multipart/form-data(입력 양식 데이터)
+  - MIME 형식을 지정할때는 type() 메소드 사용.
+  - 예시
+```jsx
+// <Content-Type 지정>
+const express = require('express');  // express 모듈 객체 생성.
+const fs = require('fs');  // (지난주차에 했던) fs모듈 객체 생성.
+
+const app = express(); // 서버 생성.
+
+app.get('/image', (request, response) => {     // /image는 URL 뒷부분(호출구호). 경로가 아님!
+   fs.readFile('image.png', (error, data) => {  // image.png파일을 read해서 data에 들어감. 만약 image.png파일 없으면 error에 들어감.
+				 	        // 여기서 파일 경로 지정하면됨.
+	response.type('image/png');  // MIME 형식은 image/png로 설정.
+	resonse.send(data);          // data에 있는 image.png를 응답(=화면에 보여줌)
+   });
+});
+
+app.listen(52273, () => {  // 서버 실행.
+  console.log('Server running at http://127.0.0.1:52273');
+}); 
+
+// 결과) 일단 작성하고 실행하면 Connot READ라고 뜨는데 
+// URL에 /image만 추가로 작성해주면(get()에서 설정했던 호출구호 입력) 
+// 작성했던 내용(image.png 내용)이 웹브라우저에 뜸!
+```
+
+- 상태 코드
+  - 1xx(처리중), 2xx(성공), 3xx(리다이렉트), 4xx(클라이언트 오류), 5xx(서버 오류)
+  - 상태 코드 지정할때는 status() 메소드 사용.
+  - 예시
+```jsx
+// <상태 코드>
+const express = require('express');  // express 모듈 객체 생성.
+const app = express(); // 서버 생성. 
+
+app.use('*', (request, response) => {   // request 이벤트 리스너 설정.
+   response.status(404);   // 상태코드 지정.
+   response.send('해당 경로에 아무것도 없습니다.');  // 응답하기.
+});
+
+app.listen(52273, () => {  // 서버 실행. 
+   console.log('Server running at http://127.0.0.1:52273');
+});
+
+// 결과) 웹브라우저 화면에는 "해당 경로에 아무것도 없습니다."만 떠 있음.
+// 상태코드 작성한거 잘 되었나 확인하는 방법은 F12(개발자도구)-Network 들어가면 확인가능!
+```
+
+ - 리다이렉트
+   - 웹브라우저가 리다이렉트를 확인하면 화면을 출력하지 않고, 응답 헤더에 있는 Location 속성을 확인해서 해당 위치로 이동함.
+   - 특정 경로로 웹 브라우저를 인도할 때 사용.
+   - redirect() 메소드 사용.
+   - 예시
+```jsx
+// <리다이렉트>
+const express = require('express');  // express 모듈 객체 생성.
+const app = express();  // 서버 생성. 
+
+app.get('*', (request, response) => {
+   response.redirect('http://naver.com');  // 리다이렉트.
+});
+
+app.listen(52273, () => {  // 서버 실행. 
+   console.log('Server running at http://127.0.0.1:52273');
+});
+
+ // 결과)실행하면 바로 리다이렉트한 URL로 넘어감!
+```
+
+- request 객체
+  - 요청 매개변수
+```jsx
+https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=%EC%B4%88%EC%BD%9C%EB%A6%BF
+
+// http는 프로토콜
+// search.naver.com은 호스트
+// search.naver은 해당 서버 내부에 있는 파일
+
+// ?뒤에 있는 내용은 키=값으로 이루어짐. &로 구분.
+// query 내용은 쿼리 문자열. 한글을 16진수로 나타냄.
+```
+
+   - 예시
+```jsx
+// <request 객체>
+const express = require('express');  // express 모듈 객체 생성.
+const app = express();   // 서버 생성. 
+
+app.get('*', (request, response) => {
+   console.log(request.query);  // Console창 출력내용은 query 부분.
+   reponse.send(request.query); // 응답할 내용은 query 부분(=웹브라우저 화면에서도 볼수있음)
+});
+
+app.listen(52273, () => {  // 서버 실행. 
+   console.log('Server running at http://127.0.0.1:52273');
+});
+
+// 결과) 실행하면 {}만 화면에 떠있는데 아무내용 없이 비어있음(쿼리 내용을 아직 작성안했기때문)
+// URL에 쿼리를 추가해야 작성한 내용이 뜸!
+// ?a=123&b=apple&c=초콜릿 같이 추가 입력하면 JSON 형태로 입력한 내용이 웹브라우저에서 뜸!
+// VS코드 Console창에도 뜸!
+```
+
+#### <5. 미들웨어>
+- 미들웨어: 서버와 클라이언트 사이에서 중개해주는 프로그램.
+- 정적파일 제공
+  - 웹페이지에서 변경되지 않는 요소(이미지, 음악, js파일 등)를 쉽게 제공.
+  - 자주 사용하는 기능이라 express 미들웨어가 자체적으로 미들웨어를 제공함(내장되어있음)
+  - 예시
+```jsx
+// <미들웨어>
+const express = require('express');  // express 모듈 객체 생성.
+const app = express(); // 서버 생성. 
+
+app.use(express.static('public'));  // static은 미들웨어. 정적. public은 내가 설정한 디렉터리(폴더) 이름. 
+app.use('*', (request, response) => {   
+    response.status(404);  // 상태코드 설정.
+    response.send('파일이 없습니다.');  // 응답하기.
+});
+
+app.listen(52273, () => {  // 서버 실행. 
+    console.log('Server running at http://127.0.0.1:52273');
+});
+
+// public이라는 폴더 만들고 거기안에 png파일 넣고 실행해보면...
+// 결과) 실행하면 Not Found라고 떠있는데(status를 404로 설정해서)
+// URL뒤에 image.png처럼 파일 경로를 작성하면 해당 파일 내용이 웹브라우저 화면에 뜸!
+
+// MIME 형식 사용 없이 미들웨어로 바로 해당 파일내용을 볼수있음!
+```
+
+- morgan 미들웨어
+  - 로그 출력해주는 미들웨어. 외부 모듈이라 설치해야함.
+  - morgan 설치
+```jsx
+> npm install morgan
+```
+
+  - 예시
+```jsx
+// <morgan 미들웨어>
+const express = require('express');  // express 모듈 객체 생성.
+const morgan = require('morgan');   // morgan 모듈 객체 생성.
+
+const app = express();  // 서버 생성. 
+app.use(express.static('public')); // static 미들웨어. 디렉터리 이름은 public.
+app.use(morgan('combined'));  // 매개변수는 combined.
+
+app.get('*', (request, response) => {
+   response.send("명령 프롬포트를 확인해주세요."); // 응답
+});
+
+app.listen(52273, () => {  // 서버 실행. 
+   console.log('Server running at http://127.0.0.1:52273');
+});
+
+// 결과) 링크 누르면 "명령 프롬포트를 확인해주세요." 내용 뜨고
+// 다시 VS코드로 돌아오면 request 정보가 뜸.
+// 웹브라우저에서 F5(새로고침)하면 VS코드에서 request 정보가 또 뜸.
+```
+
+- body-parser 미들웨어
+  - 요청 본문을 분석해주는 미들웨어. 외부모듈이라 설치해야함.
+  - 요청 본문을 사용하면 URL에 키=값같은 정보를 남길필요없이 데이터를 전달 가능.
+  - 요청 본문의 종류
+    - application/x-www-form-unlencoded: 웹브라우저에서 입력 양식을 POST, PUT, DELETE 방식 등으로 전달할때 사용하는 기본적인 요청 형식.
+    - application/json: JSON 데이터로 요청하는 방식.
+    - multipart/form-data: 대용량 파일을 전송할때 사용하는 요청방식.
+  - body-parser 설치
+```jsx
+> npm install body-parser
+```
+
+  - 예시
+```jsx
+// <body-parser 미들웨어>
+const express = require('express');  // express 모듈 객체 생성.
+const bodyParser = require('body-parser'); // body-parser 모듈 객체 생성.
+
+const app = express();  // 서버 생성. 
+app.use(bodyParser.urlencoded({extended:false}));
+
+app.get('/', (request, response) => {   // URL에 /를 입력하면(호출 구호) 밑의 내용을 출력.
+  // HTML 형식의 문자열 생성.
+  let output = '';
+  output += '<form method="post">';   // post 형식
+  output += '<input type="text" name="a" />'; 
+  output += '<input type="text" name="b" />'; 
+  output += '<input type="submit">'; 
+  output += '</form>';
+	
+  response.send(output);  // 응답(output 내용들을 화면에 출력)
+});
+
+app.post('/', (request, response) => {
+  response.send(request.body);  // 응답.
+});
+
+app.listen(52273, () => {    // 서버 실행. 
+  console.log('Server running at http://127.0.0.1:52273');
+});
+
+// 결과) 내용을 입력할수있는 공간 2개가 뜨고, 제출 버튼이 뜸.
+// 버튼을 누르면 JSON 형식으로 입력했던 내용이 나옴.
+```
+### [11장. 미니프로젝트-RESTful 웹 서비스]
+- RESTful 웹 서비스: REST(REpresentational State Transfer) 규정에 맞게 만든 ROA(Resource Oriented Architecture)를 따르는 웹 서비스 디자인 표준.
+- RESTful 웹 서비스의 구조: GET(조회), POST(추가), PUT(변경), DELETE(삭제)
+  - GET 메소드의 특수기호 /user : 모든 사용자 정보를 조회.
+  - POST 메소드의 특수기호 /user :  사용자를 추가.
+  - GET 메소드의 특수기호 /user:id  : 특정 사용자 정보를 조회.
+  - PUT 메소드의 특수기호 /user:id  : 특정 사용자 정보를 수정.
+  - DELETE 메소드의 특수기호 /user:id  : 특정 사용자 정보를 제거.
 
 ***
 ## [05월18일] <a id="0518"></a>
