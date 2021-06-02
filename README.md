@@ -1,6 +1,7 @@
 # 조항재 [201840229]
 ***
 ## [MENU]
+- [0601-14주차](#0601) : [12장.웹브라우저의 자바스크립트] + [14장.jQuery]
 - [0525-13주차](#0525) : [10장.express 모듈]
 - [0518-12주차](#0518) : [9장.Node.js기본]
 - [0511-11주차](#0511) : [7장.표준내장객체] + [8장.예외처리]
@@ -17,7 +18,464 @@
 ## [TIP]
 - 최신 입력 날짜가 항상 위에 있어야함!
 - 입력이나 삭제 한꺼번에 하기 : Ctrl+Shift+Alt 누른상태로 방향키 위,아래로 움직이면 커서가 위,아래로 늘어남. <br>
-그래서 커서 범위에 따라 여러줄 삭제, 입력가능 + ESC키 누르면 원래상태로 돌아옴.
+  그래서 커서 범위에 따라 여러줄 삭제, 입력가능 + ESC키 누르면 원래상태로 돌아옴.
+
+***
+## [06월01일] <a id="0601"></a>
+### 오늘 배운 내용 요약
+> 1. 웹브라우저의 자바스크립트(window, screen, location, history, navigator 객체)
+> 2. jQuery 객체 사용과 생성
+> 3. 문서 객체 선택, 조작, 생성
+> 4. 이벤트, 애니메이션
+
+### [12장. 웹브라우저의 자바스크립트]
+#### <1. 구 버전 웹브라우저에서 사용할 수 없는 코드>
+- let 키워드와 const 키워드: 구버전에서는 var 키워드를 사용해 변수를 만들어야했음.
+
+- 템플릿 문자열
+  - 구버젼 예시: console.log('변수의 값은 ' + variable + '입니다.');    >> 따옴표랑 +를 이용해서 사용.
+  - 최신 예시: console.log(`변수의 값은 ${variable}입니다.`);    >> ( ` )백틱이랑 $를 이용해서 사용.
+
+- 화살표 함수
+  - 구버젼에는 화살표함수 사용못해서 function 키워드 사용해야 했음. 
+  - 최신에는 화살표 함수 사용 가능.
+
+- for of 반복문
+  - 구버젼에서는 for of를 사용못해서 for in으로 대체해서 사용해야 했음.
+  - 최신에는 for of 사용가능.
+
+#### <2. 브라우저 객체 모델>
+
+#### <3. window 객체>
+- window 객체: 웹 페이지 자체를 나타냄. 
+  - ex) 새로운 화면을 열거나 웹 브라우저의 크기를 변경하는 등의 일
+  - ex) 대표적으로 경고 출력을 하는 경고창과 입력을 하는 프롬포트를 제공.
+
+- 경고 함수와 입력함수
+  - alert( 메시지 ) : 경고창을 출력.
+  - prompt( 메시지, 임시 글자 ) : 프롬포트를 출력.
+
+#### <4. screen 객체>
+- 웹 브라우저에서 공통으로 활용할 수 있는 속성
+  - width: 화면의 너비,  height: 화면의 높이
+  - availWidth: 실제 화면에서 사용 가능한 너비
+  - availHeight: 실제 화면에서 사용 가능한 높이
+  - colorDepth: 사용 가능한 색상 수
+  - pixelDepth: 한 픽셀당 비트 수
+
+#### <5. location 객체와 history 객체>
+- location 객체의 속성
+  - href: 문서의 URL 주소
+  - host: 호스트 이름과 포트 번호
+  - hostname: 호스트 이름
+  - port: 포트 번호
+  - pathname: 디렉터리 경로
+  - hash: 앵커 이름(#)
+  - search: 요청 매개 변수
+  - protocol: 프로토콜 종류
+
+- location 객체의 메소드
+  - assign( 링크 ): 매개변수로 전달한 위치로 이동
+  - reload(): 새로고침.
+  - replace(): 매개 변수로 전달한 위치로 이동(뒤로 가기 불가능)
+
+- history 객체의 메소드
+  - forward() : 앞으로 이동
+  - back(): 뒤로 이동
+
+#### <6. navigator 객체>
+- navigator 객체의 속성
+  - appCodeName: 웹 브라우저의 코드 이름
+  - appName: 웹 브라우저의 이름
+  - appVersion: 웹 브라우저의 버전
+  - platform: 사용 중인 운영체제의 시스템 환경
+  - userAgent: 웹 브라우저의 전체적인 정보
+
+### [14장. jQuery]
+#### <1. jQuery 사용 준비>
+- jQuery 사이트: https://jquery.com/  >> 사용하는 방법이 3가지 있음 
+- 1)코드를 다운받아서 사용.
+  - [맨 위의 코드]-[다른 이름으로 코드 저장] 누르면 됨!
+  - compressed는 한줄로 되어있는 압축형 코드이고, uncompressed는 여러줄로 되어있어서 가독성 좋은 코드.
+     - 사용할때는 compressed코드, 무슨 코드인지 볼때는 uncompressed 코드 다운!
+
+- 2)cdn(Content delivery network)으로 사용. 
+   - 부트스트랩처럼 네트워크 연결되어있으면 코드 복붙해서 사용할수 있는 방식
+
+- 3)npm을 설치해서 사용.
+```jsx
+> npm install jquery 
+```
+
+- html파일 만들어서 script태그에 위치(상대경로) 코드 붙여서 연결했음!
+  - [node_modules 폴더]-[jquery]-[dist]-jquery.min.js 파일에다가 오른쪽마우스-Copy Relative Path(상대경로 복사)해서 붙여넣음.
+
+#### <2. jQuery 객체>
+- 기본형식: $( 객체 ).메소드( 매개변수, 매개변수 )
+  - $는 jquery라고 나타내는 함수. $대신 jquery사용해도 가능함.
+  - 참고)JavaScript에서는 특수기호($, _)를 사용해도 함수취급가능.
+
+- jQuery 객체 생성 예시
+```jsx
+$(document)   // 일반 문서 객체로 jQuery 객체를 생성.
+$('h1')       // CSS 선택자로 jQuery 객체를 생성.
+$('<h1></h1>')   // HTML 문자열로 jQuery 객체를 생성.
+```
+
+```jsx
+$(document).ready()  // 문서 객체의 생성 완료 시점을 잡는 이벤트 연결
+```
+
+#### <3. 문서 객체 선택>
+- 문서 객체 선택 예시
+```jsx
+$('h1')  // h1 태그를 선택
+$('h1.logo')  // h1 태그 중 class이름이 logo인 태그를 선택
+$('#head')   // id이름이 head인 태그를 선택
+$('input[type=submit]')  // input태그중 type 속성이 submit인 태그를 선택
+```
+
+- 문서 객체 선택(13장 참고)
+```jsx
+// JavaScript에서 문서 객체 선택할때...
+document.getElementById(아이디)   // 아이디를 사용해 문서 객체를 선택
+document.querySelector(선택자)   // 선택자를 사용해 문서 객체를 선택
+
+// 이렇게 긴데, $로 축약해서 사용할수 있음.
+```
+
+- 객체 탐색 메소드
+  - parent() : 부모태그를 선택, find(): 후손태그를 찾음. 
+```jsx
+$('h1').parent()   // h1태그의 부모 태그를 선택
+```
+```jsx
+$('h1').find('i')  // h1태그안에 있는 i태그를 선택
+```
+
+#### <4. 문서 객체 개별 조작>
+- length(): 선택된 문서의 객체의 수를 구함.
+- get(): 선택한 문서 객체 중 하나를 선택.
+```jsx
+// <문서 객체 개별조작-for문-매개변수 없을때> 
+<head>
+  <script>
+    $(document).ready(function () {   
+      let $headers = $('h1');  // h1태그에 있는 값을 모두 $headers에 넣음.
+      for(let i=0; i<$headers.length; i++) {   // i가 $headers(집어넣은 h1태그)의 객체의 수보다 적을때까지 반복
+	if(i%2==1) {    // 변수 i(=인덱스 값)이 홀수이면...
+	   let domElement = $headers.get(i);  // 해당 객체를 선택해서 domElement에 넣음.
+	   $(domElement).css('backgroundColor', 'red'); // domElement(선택했던 객체)의 css는 배경색을 빨강색으로 설정.
+	}
+      }      // 매개변수가 없어서 이렇게 선택해서 사용해야함.
+   });    
+  </script>
+</head>
+<body>
+  <h1>HeaderA</h1>
+  <h1>HeaderB</h1>
+  <h1>HeaderC</h1>
+  <h1>HeaderD</h1>
+  <h1>HeaderE</h1>
+</body>
+
+// 출력결과) 인덱스값이 홀수인 곳(B,D)의 배경색이 빨강색으로 되어있음
+```
+
+- each(): 선택한 문서 객체에 반복을 적용.
+```jsx
+// <문서 객체 개발조작2-each() 메소드-매개변수 있을때>
+<head>
+  <script>
+    $(document).ready(function () {
+      $('h1').each(function (index, element) {  // h1태그를 모두 추출하고 반복.
+	if(index%2==1) {    // 인덱스 값이 홀수이면...
+	  $(this).css('backgroundColor', 'red'); // 배경색을 빨강색으로 설정.
+	}
+      });   // 이렇게 for문 대신에 each로 간략하게 사용 가능!
+    });
+  </script>
+</head>
+<body>
+  <p class="text-1">HeaderA</p>
+  <p class="text-1">HeaderB</p>
+  <p class="text-2">HeaderC</p>
+  <p class="text-2">HeaderD</p>
+</body>
+```
+- odd 선택자와 even 선택자: odd는 홀수, even 짝수.
+```jsx
+//  <odd와 even선택자>
+$('h1:even').css('backgroundColor', 'green');   // h1의 인덱스값이 짝수일경우 배경색이 초록색.
+$('h1:odd').css('backgroundColor', 'blue');  // h1의 인덱스값이 홀수일경우 배경색이 파랑색.
+```
+
+#### <5. 문서 객체 조작>
+- 문자 조작
+  - text(): -html태그 내부의 문자를 조작함(HTML 태그를 인식못함) <br>
+ &nbsp;&nbsp;-여러개의 문서 객체를 선택할때 모든 문서 객체 내부의 문자를 출력.
+  - html(): -html태그 내부의 문자를 조작(HTML태그를 인식) <br>
+ &nbsp;&nbsp;-여러개의 문서 객체를 선택할때 첫번째 문서 객체 내부의 문자를 출력.
+```jsx
+// <text()와 html() 기본형식>
+$('h1').text()   // h1태그 내부의 문자를 가져옴. 그냥 그대로 가져옴.
+                 // ex) <h1><strong>안녕하세요</strong></h1>이렇게 있으면 그대로 나옴.
+
+$('h1').html()   // h1태그 내부의 html태그 적용되어서 가져옴.
+                 // ex) <h1><strong>안녕하세요</strong></h1>이렇게 있으면 "안녕하세요"만 나옴.
+```
+
+```jsx
+// <문서 객체 조작-매개변수가 있을때>
+<head>
+  <script>
+    $(document).ready(function() {
+      alert($('.text-1').text('<h1>text()메서드</h1>'));
+      alert($('.text-2').html('<h1>html()메서드</h1>'));
+    });
+  </script>
+</head>
+  // text(), html() 메소드 안에 매개변수를 넣었음. + 매개변수 넣으면 밑의 값을 덮어씌워서 적용함. 
+  // 만약 매개변수가 없으면 해당 태그를 추출해서 사용해야함.
+
+<body>
+  <p class="text-1">HeaderA</p>
+  <p class="text-1">HeaderB</p>
+  <p class="text-2">HeaderC</p>
+  <p class="text-2">HeaderD</p>
+</body>
+
+// 출력결과)  <h1>text()메소드</h1> 2줄 = 문자 그대로 나옴. 
+//            html()메소드 2줄 나옴 = h1적용된 문자로 나옴.
+```
+
+- 정리
+  - 매개변수가 없으면 추출해서 사용했고, 매개변수가 있으면 기존 내용 없애고 매개변수 값으로 사용했음.
+  - text() 메소드는 문자 그대로 출력되었다면, html() 메소드는 html 태그를 적용해서 출력되었음.
+
+- 스타일 조작
+  - css() : 스타일을 조작함.
+```jsx
+$('h1').css('color')   // h1태그의 color 속성을 가져옴.
+$('h1').css('color', 'red') // h1태그의 color 속성을 red로 설정.
+$('h1').css({       // h1태그에 color와 backgroundColor속성을 JSON 형태로 한꺼번에 설정.
+  color: 'red',
+  backgroundColor: 'orange'
+})
+```
+
+```jsx
+// <스타일 조작>
+<head>
+  <script>
+    $(document).ready(function () {
+      for(let i=0; i<256; i++) {
+        $('<div></div>').css({height: 2, background: 'rgb('+i+','+i+','+i+')'}).appendTo('body');   // 지정한 속성들을 body태그에 적용한다는 뜻.
+      }
+    });
+  </script>
+</head>
+<body>
+
+</body>
+```
+
+- 속성 조작
+  - attr(): 속성을 조작합니다.
+```jsx
+$('img').attr('src')   // img태그의 src속성을 가져옴.
+
+$('img').css('src', 'http://placehold.it/100*100')  // img태그의 src속성을 placehold사이트에서 임시 이미지로 설정. + 크기는 100*100으로 설정.
+
+$('img').css({    // 이렇게 JSON형태로 한꺼번에 설정 가능.
+  src: 'http:/placehold.it/100*100',
+  alt: 'placehold.it'
+})
+```
+
+- 대략적인 디자인을 할때 임시 이미지 사이즈 가져오는 사이트: [https://placeholder.com/](https://placeholder.com/)
+
+#### <6. 문서 객체 생성>
+- 꺾새(< >) 유무 차이점
+```jsx
+$('div')         // div태그를 찾아내라는 뜻
+$('<div></div>')  // div태그를 생성하라는 뜻 + 기본적으로 body태그 안에서 만들어짐.
+```
+
+- 문서 객체 추가 메소드
+```jsx
+$( A ).prependTo( B )     // A를 B 안쪽 앞에 추가.
+$( A ).appendTo( B )      // A를 B 안쪽 뒤에 추가.
+$( A ).insertBefore( B )  // A를 B 앞에 추가.
+$( A ).insertAfter( B )   // A를 B 뒤에 추가.
+```
+
+#### <7. 이벤트>
+- jQuery의 이벤트 메소드
+  - on() : 이벤트를 연결
+  - off() : 이벤트를 제거
+
+- 이벤트 직접 연결
+```jsx
+$(선택자).on(이벤트 이름, 콜백 함수)
+```
+
+```jsx
+// <이벤트 직접 연결>
+<head>
+  <script> 
+    $(document).ready(function () {
+      $('h1').on('click', function (event) {  // h1을 클릭하면...
+	let text = $(this).text();   // h1의 텍스트 내용을 text에 넣어서
+	alert(text);   // 팝업창으로 text 값을 출력.
+      });
+    });
+  </script>
+</head>
+<body>
+  <h1>Header_1</h1>
+  <h1>Header_2</h1>
+</body>
+```
+
+- 이벤트 종류
+  - 키보드 이벤트
+    - keydown(): 키보드 키를 눌렀을때
+    - keypress(): 키가 입력되었을때
+    - keyup(): 키보드 키를 떼었을때
+
+  - 마우스 이벤트
+    - click(): 마우스를 클릭했을때
+    - dblclick(): 마우스를 더블 클릭했을때
+    - mousedown(): 마우스 버튼을 눌렀을때
+    - mouseenter(): 마우스 커서가 해당 태그로 들어갔을때
+    - mouseleave(): 마우스 커서가 해당 태그에서 나갔을때
+    - mousemove(): 마우스가 움직일때
+    - mouseup(): 마우스 버튼을 뗄 때
+
+  - 입력 양식 이벤트
+    - blur(): 입력 양식에 값 입력을 종료할 때
+    - change(): 입력 양식의 값이 변경될 때
+    - focus(): 입력 양식에 값 입력을 시작할때
+    - select(): type 속성이 select인 입력 양식의 목록에서 값을 선택했을때
+    - submit(): type 속성이 submit인 입력 양식을 클릭했을때
+
+  - 웹 브라우저 이벤트   
+    - resize(): 웹 브라우저의 크기를 변경할때
+    - scroll(): 웹 브라우저를 스크롤할때
+
+- 이벤트 발생하면 새로운 객체 생성
+```jsx
+// <이벤트 발생하면 새로운 객체 생성>
+<head>
+  <script>
+    $(document).ready(function () {
+	$('h1').on('click', function(event) {   // h1태그를 클릭하면...
+	  $('<h1></h1>').text($(this).text()).appendTo('body');  // h1태그가 생성+h1 텍스트 내용을 집어넣어 body태그 안에 추가.
+        });   
+    });		
+  </script>
+</head>
+<body>
+  <h1>Header</h1>
+</body>
+
+// 결과) h1태그인 Header를 클릭할때마다 Header가 추가됨.
+```
+
+- 이벤트 추가 연결
+```jsx
+// <이벤트 추가 연결>
+<script>
+  $(document).ready(function () {
+    let handler = function(event) {
+      $('<h1></h1>').text($(this).text()).on('click', handler).appendTo('body');   // h1태그를 생성해 body 태그에 추가.
+    });  
+
+    $('h1').on('click', handler);  // h1태그에 click 이벤트를 연결.
+  });
+</script>
+```
+
+- 이벤트 간접 연결: 부모에게 이벤트를 위임해서 부모가 이벤트를 처리하게 하는 것.
+```jsx
+// <이벤트 간접 연결>
+<head>
+  <script>
+    $(document).ready(function() {
+      $('body').on('click', 'h1', function(event) {  // body태그에 h1 태그의 click 이벤트를 위임.
+	$('<h1></h1>').text($(this).text()).appendTo('body'); // h1태그를 생성해 body 태그에 추가.
+      });
+    });
+  </script>
+</head>
+<body>
+  <h1>Header</h1>
+</body>
+
+// h1 태그의 부모인 body태그에 이벤트를 연결했음.
+// 결과) body 태그 내부에서 h1태그를 클릭했을때 이벤트 발생함!
+```
+
+- 이벤트 제거
+  - off() 메소드 사용.
+```jsx
+$('h1').off();  // h1태그의 모든 이벤트를 제거
+$('h1').off('click');  // h1태그의 click 이벤트를 모두 제거
+$('h1').off('click', handler);  // h1태그의 click 이벤트로 연결한 콜백함수 중 특정한 콜백함수만 제거
+```
+
+```jsx
+// <이벤트 제거>
+<head>
+  <script>
+    $(document).ready(function () {
+      let handler = function(event) {
+        $('<h1></h1>').text($(this).text()).click(handler).appendTo('body'); // h1 태그를 생성해 body 태그안에 추가.
+	$(this).off();  // 현재 태그의 이벤트를 제거
+      };
+      $('h1').on('click', handler);  // h1 태그를 클릭하면 이벤트 발생.
+    });		
+  </script>
+</head>
+<body>
+  <h1>Header</h1>
+</body>
+```
+
+- 이벤트를 한번만 연결하는 메소드: one()
+
+#### <8. 애니메이션>
+- animate(): 애니메이션을 적용.
+  - 스타일에 적용.
+  - 숫자를 적용할 수 있는 모든 속성에 animate() 메소드 사용 가능
+  - 콜백 함수는 애니메이션이 종료되었을때 호출, 생략 가능.
+```jsx
+$( 선택자 ).animate( 속성, 시간, 콜백함수)
+```
+
+```jsx
+// <애니메이션>
+<head> 
+  <style>  
+    .box{
+      width:100px; height:100px; background-color:red; position:absolute; left:10px; top:10px;
+    }
+  </style>  // style태그 안에 움직일 도형을 만들고 꾸밈.
+  <script>
+    $(document).ready(function () {
+      $('box').click(function () {  // box 태그를 클릭하면...
+	$(this).animate({
+	  left:1000  // left방향으로 1000px 이동.
+	}, 1000);  // 1000은 1초(=1000ms)
+     });
+   });
+  </script>
+</head>
+<body>
+  <div class="box"></div>
+</body>
+```
 
 ***
 ## [05월25일] <a id="0525"></a>
